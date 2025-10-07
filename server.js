@@ -115,17 +115,33 @@ app.post('/compile', async (req, res) => {
         } catch (error) {
             // Try to read log file for error details
             const logFile = path.join(jobDir, 'document.log');
-            let errorMessage = 'Compilation failed. Please check your LaTeX syntax.';
+            let errorMessage = 'Compilation failed.';
+            let fullLog = '';
 
             try {
                 const logContent = await fs.readFile(logFile, 'utf8');
+                fullLog = logContent;
                 const errorLines = extractErrorFromLog(logContent);
                 if (errorLines) {
                     errorMessage = errorLines;
+                } else {
+                    // If no specific error found, check for missing packages
+                    if (logContent.includes('! LaTeX Error: File') && logContent.includes('.sty\' not found')) {
+                        const styMatch = logContent.match(/File `([^']+\.sty)' not found/);
+                        if (styMatch) {
+                            errorMessage = `Missing LaTeX package: ${styMatch[1]}\n\nThis package is not installed on the server. Please simplify your LaTeX or use only basic packages.`;
+                        }
+                    } else {
+                        errorMessage = 'Compilation failed. Please check your LaTeX syntax.';
+                    }
                 }
             } catch (logError) {
                 // Log file not available
+                errorMessage = 'Compilation failed and no log file was generated.';
             }
+
+            // Log the full error for debugging
+            console.error('LaTeX compilation failed. Full log:\n', fullLog.slice(-1000)); // Last 1000 chars
 
             return res.json({ success: false, error: errorMessage });
         }

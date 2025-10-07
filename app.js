@@ -586,7 +586,7 @@ async function compileLatex() {
     // Retry logic for sleeping server on free tier
     const maxRetries = 3;
     const retryDelays = [5000, 10000, 15000]; // 5s, 10s, 15s
-    
+
     for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
             if (attempt > 0) {
