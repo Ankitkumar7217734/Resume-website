@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -5,9 +6,13 @@ const { exec } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Initialize Gemini AI
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
 
 // Guard to prevent missing graphics from aborting compilation
 const GRAPHICS_GUARD = `
@@ -245,6 +250,62 @@ app.post('/convert-to-docx', async (req, res) => {
     }
 });
 
+// Generate LaTeX with AI
+app.post('/generate-latex', async (req, res) => {
+    const { prompt } = req.body;
+
+    if (!prompt) {
+        return res.status(400).json({ success: false, error: 'No prompt provided' });
+    }
+
+    if (!genAI) {
+        return res.json({ 
+            success: false, 
+            error: 'AI service not configured. Please set GEMINI_API_KEY environment variable.' 
+        });
+    }
+
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+        const systemPrompt = `You are an expert LaTeX code generator. Generate clean, professional LaTeX code based on the user's request.
+
+IMPORTANT RULES:
+1. Only use these basic packages that are guaranteed to be available:
+   - geometry (for margins)
+   - titlesec (for section formatting)
+   - enumitem (for lists)
+   - hyperref (for links)
+2. Do NOT use: fontawesome5, latexsym, marvosym, xcolor, fancyhdr, fullpage, or any advanced packages
+3. Return ONLY the LaTeX code, no explanations
+4. Start with \\documentclass[11pt,a4paper]{article}
+5. Keep it simple and professional
+6. Use standard fonts and formatting
+7. Make it compile-ready
+
+User request: ${prompt}`;
+
+        const result = await model.generateContent(systemPrompt);
+        const response = await result.response;
+        let latexCode = response.text();
+
+        // Clean up the response - remove markdown code blocks if present
+        latexCode = latexCode.replace(/```latex\n?/g, '').replace(/```\n?/g, '').trim();
+
+        res.json({ success: true, latex: latexCode });
+
+    } catch (error) {
+        console.error('AI generation error:', error);
+        let errorMessage = 'AI generation failed: ';
+        if (error.message) {
+            errorMessage += error.message;
+        } else {
+            errorMessage += 'Unknown error';
+        }
+        res.json({ success: false, error: errorMessage });
+    }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'LaTeX Editor Backend is running' });
@@ -324,7 +385,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`LaTeX Editor Backend running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`Server ready to accept connections`);
-    
+
     if (process.env.RENDER) {
         console.log('Running on Render.com');
     } else {

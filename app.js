@@ -228,6 +228,68 @@ function clearAllFiles() {
     }
 }
 
+// Generate LaTeX with AI
+async function generateWithAI(prompt) {
+    if (!prompt || prompt.trim() === '') {
+        alert('Please describe what you want to create.');
+        return;
+    }
+
+    // Show loading state
+    const aiStatus = document.getElementById('aiStatus');
+    const aiStatusText = document.getElementById('aiStatusText');
+    const generateBtn = document.getElementById('generateAI');
+    
+    aiStatus.style.display = 'block';
+    aiStatusText.textContent = 'Generating LaTeX code with AI...';
+    generateBtn.disabled = true;
+
+    // Determine API URL
+    const apiUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000/generate-latex'
+        : '/generate-latex';
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ prompt: prompt.trim() })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.latex) {
+            // Insert the generated LaTeX into the editor
+            editor.setValue(data.latex);
+            
+            // Close the modal
+            document.getElementById('aiModal').classList.add('hidden');
+            document.getElementById('aiPrompt').value = '';
+            
+            // Show success message
+            showStatus('AI generated LaTeX successfully!', 'success');
+            
+            // Auto-compile if enabled
+            if (settings.autoCompile) {
+                setTimeout(() => compileLatex(), 1000);
+            }
+        } else {
+            showError(data.error || 'Failed to generate LaTeX code');
+            showStatus('AI generation failed', 'error');
+        }
+    } catch (error) {
+        console.error('AI generation error:', error);
+        showError('Failed to connect to AI service. ' + error.message);
+        showStatus('AI generation failed', 'error');
+    } finally {
+        // Hide loading state
+        aiStatus.style.display = 'none';
+        generateBtn.disabled = false;
+    }
+}
+
 // Create new file
 function createNewFile(content = null, name = null) {
     const fileName = name || `Document_${Date.now()}`;
@@ -367,6 +429,12 @@ function initializeEventListeners() {
     // Theme toggle
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
+    // AI button
+    document.getElementById('aiBtn').addEventListener('click', () => {
+        document.getElementById('aiModal').classList.remove('hidden');
+        document.getElementById('aiPrompt').focus();
+    });
+
     // Settings button
     document.getElementById('settingsBtn').addEventListener('click', () => {
         document.getElementById('settingsModal').classList.remove('hidden');
@@ -466,6 +534,24 @@ function initializeEventListeners() {
             renameFile(fileToRename, newName);
         } else if (e.key === 'Escape') {
             hideRenameModal();
+        }
+    });
+
+    // AI modal
+    document.getElementById('generateAI').addEventListener('click', () => {
+        const prompt = document.getElementById('aiPrompt').value;
+        generateWithAI(prompt);
+    });
+
+    document.getElementById('cancelAI').addEventListener('click', () => {
+        document.getElementById('aiModal').classList.add('hidden');
+        document.getElementById('aiPrompt').value = '';
+    });
+
+    document.getElementById('aiPrompt').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            const prompt = document.getElementById('aiPrompt').value;
+            generateWithAI(prompt);
         }
     });
 
