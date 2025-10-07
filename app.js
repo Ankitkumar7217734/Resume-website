@@ -491,43 +491,63 @@ async function compileLatex() {
 
     // Try backend server first (if running), then fallback to client-side
     // Use relative URL for production (same domain) or localhost for dev
-    const apiUrl = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3000/compile' 
+    const apiUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000/compile'
         : '/compile';
-    
+
     try {
+        // Add longer timeout for sleeping server (60 seconds)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+        showStatus('Compiling... (server may be waking up, please wait)', 'compiling');
+
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ code })
+            body: JSON.stringify({ code }),
+            signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
             const data = await response.json();
             if (data.success) {
                 currentPdfData = data.pdf;
                 await renderPdf();
-                showStatus('Compilation successful (server)', 'success');
+                showStatus('Compilation successful', 'success');
                 showLoading(false);
                 return;
+            } else {
+                throw new Error(data.error || 'Compilation failed');
             }
+        } else {
+            throw new Error('Server error: ' + response.status);
         }
     } catch (backendError) {
-        console.log('Backend not available, trying client-side compilation...');
+        console.log('Backend error:', backendError);
+        
+        if (backendError.name === 'AbortError') {
+            showError('Server timeout. The server may be starting up (free tier). Please wait a moment and try again.');
+            showStatus('Timeout - Please retry', 'error');
+            showLoading(false);
+            return;
+        }
     }
 
     // Backend failed or not available, try LaTeX.js
     try {
         if (typeof latexjs === 'undefined') {
-            throw new Error('LaTeX.js library not loaded and backend server not available. Please start the backend server with: node server.js');
+            throw new Error('Backend server unavailable. If this persists, the server may be restarting. Please wait 30-60 seconds and try again.');
         }
 
         // Parse and compile LaTeX to HTML
         const generator = latexjs.parse(code, { generator: new latexjs.HtmlGenerator() });
         const htmlDoc = generator.htmlDocument();
-        
+
         // Create a temporary container for rendering
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'absolute';
@@ -544,7 +564,7 @@ async function compileLatex() {
             backgroundColor: '#ffffff',
             logging: false
         });
-        
+
         document.body.removeChild(tempContainer);
 
         // Create PDF
@@ -555,29 +575,29 @@ async function compileLatex() {
             unit: 'mm',
             format: 'a4'
         });
-        
+
         const imgWidth = 210; // A4 width in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
+
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        
+
         // Convert PDF to base64
         const pdfBase64 = pdf.output('datauristring').split(',')[1];
-        
+
         currentPdfData = pdfBase64;
         await renderPdf();
         showStatus('Compilation successful (client-side)', 'success');
     } catch (error) {
         console.error('Compilation error:', error);
         const errorMsg = error.message || String(error);
-        
+
         let helpText = '\n\n💡 Solutions:';
         helpText += '\n1. Start backend server: node server.js (for full LaTeX support)';
         helpText += '\n2. Or simplify your LaTeX for browser compilation:';
         helpText += '\n   • Remove packages (amsmath, geometry, etc.)';
         helpText += '\n   • Use \\documentclass{article} without options';
         helpText += '\n   • Keep formatting basic';
-        
+
         showError('Compilation failed: ' + errorMsg + helpText);
         showStatus('Compilation error', 'error');
     } finally {
@@ -838,7 +858,7 @@ window.addEventListener('load', () => {
     console.log('LaTeX Editor initialized');
     loadSavedFiles();
     showHomepage();
-    
+
     // Check if LaTeX.js is loaded
     setTimeout(() => {
         if (typeof latexjs !== 'undefined') {
