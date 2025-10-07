@@ -16,7 +16,10 @@ apt-get install -y \
     texlive-fonts-recommended \
     texlive-fonts-extra \
     texlive-xetex \
-    texlive-luatex
+    texlive-luatex \
+    texlive-latex-recommended \
+    texlive-science \
+    texlive-pictures
 
 # Install Pandoc for DOCX conversion
 echo "Installing Pandoc..."
