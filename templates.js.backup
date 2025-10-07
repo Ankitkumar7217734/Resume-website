@@ -1,0 +1,496 @@
+// LaTeX Templates
+const TEMPLATES = {
+    article: `\\documentclass[12pt]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{graphicx}
+\\usepackage{hyperref}
+
+\\title{Your Article Title}
+\\author{Your Name}
+\\date{\\today}
+
+\\begin{document}
+
+\\maketitle
+
+\\begin{abstract}
+This is a brief summary of your article. It should provide an overview of the main points and findings.
+\\end{abstract}
+
+\\section{Introduction}
+This is the introduction section. Here you can introduce your topic and provide background information.
+
+\\section{Main Content}
+This is where the main body of your article goes.
+
+\\subsection{Subsection Example}
+You can organize your content using subsections.
+
+\\subsubsection{Subsubsection}
+And even smaller divisions if needed.
+
+\\section{Mathematical Equations}
+You can include inline math like $E = mc^2$ or display equations:
+
+\\begin{equation}
+    \\int_{a}^{b} f(x) dx = F(b) - F(a)
+\\end{equation}
+
+\\section{Lists}
+Here are some examples of lists:
+
+\\begin{itemize}
+    \\item First item
+    \\item Second item
+    \\item Third item
+\\end{itemize}
+
+\\begin{enumerate}
+    \\item First numbered item
+    \\item Second numbered item
+    \\item Third numbered item
+\\end{enumerate}
+
+\\section{Conclusion}
+Summarize your main points here.
+
+\\end{document}`,
+
+    report: `\\documentclass[12pt]{report}
+\\usepackage[utf8]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{graphicx}
+\\usepackage{hyperref}
+
+\\title{Report Title}
+\\author{Your Name}
+\\date{\\today}
+
+\\begin{document}
+
+\\maketitle
+
+\\tableofcontents
+
+\\chapter{Introduction}
+This is the first chapter of your report. Reports typically use chapters as the main organizational unit.
+
+\\section{Background}
+Provide background information here.
+
+\\section{Objectives}
+List your objectives here.
+
+\\chapter{Methodology}
+Describe your methods in this chapter.
+
+\\section{Data Collection}
+Explain how you collected data.
+
+\\section{Analysis}
+Describe your analysis methods.
+
+\\chapter{Results}
+Present your findings here.
+
+\\section{Key Findings}
+Highlight the most important results.
+
+\\chapter{Discussion}
+Discuss the implications of your findings.
+
+\\chapter{Conclusion}
+Summarize your work and provide conclusions.
+
+\\begin{thebibliography}{9}
+\\bibitem{ref1}
+Author Name,
+\\textit{Book or Article Title},
+Publisher, Year.
+\\end{thebibliography}
+
+\\end{document}`,
+
+    letter: `\\documentclass{letter}
+\\usepackage[utf8]{inputenc}
+\\usepackage{hyperref}
+
+\\signature{Your Name}
+\\address{Your Address \\\\ City, State ZIP \\\\ Email: your.email@example.com}
+
+\\begin{document}
+
+\\begin{letter}{Recipient Name \\\\ Company/Organization \\\\ Address \\\\ City, State ZIP}
+
+\\opening{Dear Sir/Madam,}
+
+This is the body of your letter. Write your message here. You can have multiple paragraphs to organize your thoughts clearly.
+
+This is a second paragraph. Continue with your message as needed.
+
+Thank you for your time and consideration. I look forward to hearing from you.
+
+\\closing{Sincerely,}
+
+\\end{letter}
+
+\\end{document}`,
+
+    resume: `\\documentclass[a4paper,11pt]{article}
+\\usepackage{latexsym}
+\\usepackage[empty]{fullpage}
+\\usepackage{titlesec}
+\\usepackage{marvosym}
+\\usepackage[usenames,dvipsnames]{xcolor}
+\\usepackage{enumitem}
+\\usepackage[hidelinks]{hyperref}
+\\usepackage{fancyhdr}
+\\usepackage{fontawesome5}
+\\usepackage{graphicx}
+\\usepackage[export]{adjustbox}
+
+%----------PAGE SETUP----------
+\\pagestyle{fancy}
+\\fancyhf{}
+\\fancyfoot{}
+\\renewcommand{\\headrulewidth}{0pt}
+\\renewcommand{\\footrulewidth}{0pt}
+
+% Adjust margins
+\\addtolength{\\oddsidemargin}{-0.5in}
+\\addtolength{\\evensidemargin}{-0.5in}
+\\addtolength{\\textwidth}{1in}
+\\addtolength{\\topmargin}{-0.5in}
+\\addtolength{\\textheight}{1.0in}
+
+%----------SECTION FORMATTING----------
+\\titleformat{\\section}{
+  \\vspace{-4pt}\\scshape\\raggedright\\large\\bfseries
+}{}{0em}{}[\\color{black}\\titlerule \\vspace{-5pt}]
+
+%----------CUSTOM COMMANDS----------
+\\newcommand{\\resumeItem}[1]{
+  \\item\\small{{#1 \\vspace{-2pt}}}
+}
+\\newcommand{\\resumeSubheading}[4]{
+  \\vspace{-2pt}\\item
+  \\begin{tabular*}{0.97\\textwidth}[t]{l@{\\extracolsep{\\fill}}r}
+    \\textbf{#1} & #2 \\\\
+    \\textit{\\small#3} & \\textit{\\small #4} \\\\
+  \\end{tabular*}\\vspace{-7pt}
+}
+\\newcommand{\\resumeProjectHeading}[2]{
+  \\vspace{-2pt}\\item
+  \\begin{tabular*}{0.97\\textwidth}[t]{l@{\\extracolsep{\\fill}}}
+    \\textbf{#1} \\textit{\\small#2} \\\\
+  \\end{tabular*}\\vspace{-7pt}
+}
+\\newcommand{\\resumeSubItem}[1]{\\resumeItem{#1}\\vspace{-4pt}}
+\\renewcommand{\\labelitemii}{$\\circ$}
+
+%-------------------------------------------
+\\begin{document}
+
+%-----------HEADER-----------
+\\noindent
+\\begin{minipage}{0.2\\textwidth}
+    \\includegraphics[width=2cm]{logo.png}
+\\end{minipage}%
+\\begin{minipage}{0.8\\textwidth}
+    \\begin{flushright}
+        {\\Huge \\textbf{Your Full Name}} \\\\[8pt]
+        \\faPhone~ +1-234-567-8900 \\quad
+        \\faEnvelope~ \\href{mailto:your.email@example.com}{your.email@example.com} \\quad
+        \\faLinkedin~ \\href{https://www.linkedin.com/in/yourprofile/}{linkedin.com/in/yourprofile}
+    \\end{flushright}
+\\end{minipage}
+
+\\vspace{10pt}
+
+%-----------PROFILE-----------
+\\section*{Professional Profile}
+\\begin{itemize}[leftmargin=*]
+    \\resumeItem{Experienced professional with expertise in \\textbf{[Your Field/Industry]} and strong background in \\textbf{[Key Skills]}.}
+    \\resumeItem{Proven track record in delivering \\textbf{measurable results} through [specific skills or technologies].}
+    \\resumeItem{Passionate about \\textbf{[Your Career Focus]} with demonstrated ability to drive innovation and efficiency.}
+\\end{itemize}
+
+%-----------EDUCATION-----------
+\\section*{Education}
+\\begin{itemize}[leftmargin=*]
+  \\resumeSubheading
+    {University Name}{City, State/Country}
+    {Bachelor of Science/Arts in [Your Major]; GPA: X.X/4.0}{Month Year -- Month Year}
+    \\begin{itemize}
+        \\resumeItem{Relevant Coursework: [Course 1], [Course 2], [Course 3], [Course 4]}
+        \\resumeItem{Academic projects in [relevant technologies or subjects]}
+    \\end{itemize}
+  \\resumeSubheading
+    {High School Name}{City, State/Country}
+    {High School Diploma with Honors}{Month Year -- Month Year}
+\\end{itemize}
+
+%-----------TECHNICAL SKILLS-----------
+\\section*{Technical Skills}
+\\begin{itemize}[leftmargin=*]
+  \\resumeItem{\\textbf{Programming Languages:} Python, Java, C++, JavaScript, SQL}
+  \\resumeItem{\\textbf{Web Technologies:} React, Node.js, HTML5, CSS3, REST APIs, GraphQL}
+  \\resumeItem{\\textbf{Databases:} MySQL, PostgreSQL, MongoDB, Redis}
+  \\resumeItem{\\textbf{Tools \\& Platforms:} Git, Docker, AWS, Azure, Jenkins, Kubernetes}
+  \\resumeItem{\\textbf{Frameworks:} Django, Flask, Spring Boot, Express.js, TensorFlow}
+  \\resumeItem{\\textbf{Other Skills:} Agile/Scrum, Data Analysis, Machine Learning, Cloud Computing}
+\\end{itemize}
+
+%-----------EXPERIENCE-----------
+\\section*{Experience}
+\\begin{itemize}[leftmargin=*]
+  \\resumeSubheading
+    {Job Title}{City, State/Country}
+    {Company Name}{Month Year -- Present/Month Year}
+    \\begin{itemize}
+        \\resumeItem{Developed and implemented \\textbf{[key project/feature]} resulting in [X\\% improvement in metrics].}
+        \\resumeItem{Led cross-functional team of [number] members to deliver \\textbf{[significant achievement]}.}
+        \\resumeItem{Optimized [system/process] improving performance by [X\\%] and reducing costs by [Y\\%].}
+        \\resumeItem{Collaborated with stakeholders to design and deploy [solution] serving [number] users.}
+    \\end{itemize}
+  \\resumeSubheading
+    {Previous Job Title}{City, State/Country}
+    {Previous Company Name}{Month Year -- Month Year}
+    \\begin{itemize}
+        \\resumeItem{Built \\textbf{[project name]} using [technologies], achieving [measurable outcome].}
+        \\resumeItem{Implemented [feature/improvement] that enhanced [metric] by [percentage].}
+        \\resumeItem{Mentored [number] junior developers and conducted code reviews to ensure quality.}
+    \\end{itemize}
+\\end{itemize}
+
+%-----------PROJECTS-----------
+\\section*{Projects \\& Initiatives}
+\\begin{itemize}[leftmargin=*]
+  \\resumeProjectHeading
+    {Project Name}{Technologies: React, Node.js, MongoDB}
+    \\begin{itemize}
+        \\resumeItem{Developed a \\textbf{full-stack web application} for [purpose] serving [number] active users.}
+        \\resumeItem{Implemented [key features] with focus on scalability and user experience.}
+        \\resumeItem{Achieved [X\\%] improvement in [metric] through optimization and best practices.}
+    \\end{itemize}
+  \\resumeProjectHeading
+    {Another Project Name}{Technologies: Python, TensorFlow, AWS}
+    \\begin{itemize}
+        \\resumeItem{Created a \\textbf{machine learning model} to predict [outcome] with [X\\%] accuracy.}
+        \\resumeItem{Deployed solution on cloud infrastructure handling [number] requests per day.}
+    \\end{itemize}
+\\end{itemize}
+
+%-----------ACHIEVEMENTS-----------
+\\section*{Achievements}
+\\begin{itemize}[leftmargin=*]
+  \\resumeItem{Received \\textbf{[Award Name]} for outstanding contribution to [project/initiative].}
+  \\resumeItem{Published \\textbf{research paper} on \\textit{"[Paper Title]"} at [Conference/Journal].}
+  \\resumeItem{Increased team productivity by \\textbf{[X\\%]} through implementation of [process/tool].}
+  \\resumeItem{Completed \\textbf{[Number]} professional certifications including [Cert 1], [Cert 2].}
+\\end{itemize}
+
+\\end{document}`,
+
+    beamer: `\\documentclass{beamer}
+\\usepackage[utf8]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{graphicx}
+
+\\usetheme{Madrid}
+\\usecolortheme{default}
+
+\\title{Your Presentation Title}
+\\author{Your Name}
+\\institute{Your Institution}
+\\date{\\today}
+
+\\begin{document}
+
+\\frame{\\titlepage}
+
+\\begin{frame}
+\\frametitle{Table of Contents}
+\\tableofcontents
+\\end{frame}
+
+\\section{Introduction}
+\\begin{frame}
+\\frametitle{Introduction}
+\\begin{itemize}
+    \\item Welcome to this presentation
+    \\item This is a Beamer slide deck
+    \\item Perfect for academic and professional presentations
+\\end{itemize}
+\\end{frame}
+
+\\section{Main Content}
+\\begin{frame}
+\\frametitle{Key Points}
+\\begin{block}{Important Concept}
+This is an important concept that you want to highlight.
+\\end{block}
+
+\\begin{alertblock}{Warning}
+This is something that requires attention.
+\\end{alertblock}
+
+\\begin{exampleblock}{Example}
+This is an example to illustrate your point.
+\\end{exampleblock}
+\\end{frame}
+
+\\begin{frame}
+\\frametitle{Lists and Bullets}
+\\begin{columns}
+\\column{0.5\\textwidth}
+\\textbf{Advantages:}
+\\begin{itemize}
+    \\item First advantage
+    \\item Second advantage
+    \\item Third advantage
+\\end{itemize}
+
+\\column{0.5\\textwidth}
+\\textbf{Disadvantages:}
+\\begin{itemize}
+    \\item First disadvantage
+    \\item Second disadvantage
+    \\item Third disadvantage
+\\end{itemize}
+\\end{columns}
+\\end{frame}
+
+\\begin{frame}
+\\frametitle{Mathematical Content}
+Here's an important equation:
+\\begin{equation}
+    E = mc^2
+\\end{equation}
+
+And another formula:
+\\begin{equation}
+    \\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}
+\\end{equation}
+\\end{frame}
+
+\\section{Conclusion}
+\\begin{frame}
+\\frametitle{Conclusion}
+\\begin{itemize}
+    \\item Summary of main points
+    \\item Key takeaways
+    \\item Future directions
+\\end{itemize}
+
+\\vspace{1cm}
+\\centering
+\\Large Thank you for your attention!
+\\end{frame}
+
+\\end{document}`,
+
+    math: `\\documentclass[12pt]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\usepackage{amsthm}
+\\usepackage{mathtools}
+
+\\newtheorem{theorem}{Theorem}
+\\newtheorem{lemma}[theorem]{Lemma}
+\\newtheorem{proposition}[theorem]{Proposition}
+\\newtheorem{corollary}[theorem]{Corollary}
+\\theoremstyle{definition}
+\\newtheorem{definition}{Definition}
+\\newtheorem{example}{Example}
+
+\\title{Mathematical Document}
+\\author{Your Name}
+\\date{\\today}
+
+\\begin{document}
+
+\\maketitle
+
+\\section{Introduction}
+This document demonstrates various mathematical typesetting capabilities in LaTeX.
+
+\\section{Basic Equations}
+Inline math: $a^2 + b^2 = c^2$
+
+Display equation:
+\\begin{equation}
+    \\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}
+\\end{equation}
+
+\\section{Theorems and Proofs}
+\\begin{theorem}[Pythagorean Theorem]
+For a right triangle with legs $a$ and $b$, and hypotenuse $c$:
+\\begin{equation}
+    a^2 + b^2 = c^2
+\\end{equation}
+\\end{theorem}
+
+\\begin{proof}
+The proof goes here...
+\\end{proof}
+
+\\begin{definition}
+A \\textbf{prime number} is a natural number greater than 1 that has no positive divisors other than 1 and itself.
+\\end{definition}
+
+\\section{Matrices and Arrays}
+A matrix example:
+\\begin{equation}
+    A = \\begin{pmatrix}
+        a_{11} & a_{12} & a_{13} \\\\
+        a_{21} & a_{22} & a_{23} \\\\
+        a_{31} & a_{32} & a_{33}
+    \\end{pmatrix}
+\\end{equation}
+
+\\section{Aligned Equations}
+\\begin{align}
+    f(x) &= x^2 + 2x + 1 \\\\
+         &= (x + 1)^2 \\\\
+         &= (x + 1)(x + 1)
+\\end{align}
+
+\\section{Summations and Products}
+\\begin{equation}
+    \\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}
+\\end{equation}
+
+\\begin{equation}
+    \\prod_{i=1}^{n} i = n!
+\\end{equation}
+
+\\section{Calculus}
+Derivative:
+\\begin{equation}
+    \\frac{d}{dx}(x^n) = nx^{n-1}
+\\end{equation}
+
+Integral:
+\\begin{equation}
+    \\int x^n dx = \\frac{x^{n+1}}{n+1} + C, \\quad n \\neq -1
+\\end{equation}
+
+\\section{Sets and Logic}
+\\begin{equation}
+    A \\cup B = \\{x : x \\in A \\text{ or } x \\in B\\}
+\\end{equation}
+
+\\begin{equation}
+    \\forall x \\in \\mathbb{R}, \\exists y \\in \\mathbb{R} : y > x
+\\end{equation}
+
+\\end{document}`
+};
+
+// Export for use in other files
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = TEMPLATES;
+}

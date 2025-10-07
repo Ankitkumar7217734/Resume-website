@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LaTeX Editor - User Guide</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #2ecc71;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #34495e;
+        margin-top: 30px;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 5px;
+      }
+      h3 {
+        color: #7f8c8d;
+        margin-top: 20px;
+      }
+      code {
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+      pre {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .tip {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .feature {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #34495e;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+      .screenshot {
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        max-width: 100%;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 LaTeX Editor - User Guide</h1>
+
+    <div class="feature">
+      <strong>Welcome!</strong> This guide will help you get the most out of the
+      LaTeX Editor.
+    </div>
+
+    <h2>🚀 Getting Started</h2>
+
+    <h3>Opening the Editor</h3>
+    <ol>
+      <li>Make sure the backend server is running: <code>npm start</code></li>
+      <li>Open <code>index.html</code> in your web browser</li>
+      <li>You'll see a sample document in the editor</li>
+    </ol>
+
+    <h3>Your First Document</h3>
+    <ol>
+      <li>
+        <strong>Write</strong>: Type your LaTeX code in the left editor pane
+      </li>
+      <li>
+        <strong>Compile</strong>: Click the green "Compile" button or press
+        <code>Ctrl+B</code> (Windows/Linux) or <code>Cmd+B</code> (Mac)
+      </li>
+      <li><strong>Preview</strong>: See your compiled PDF in the right pane</li>
+      <li>
+        <strong>Download</strong>: Click "PDF" or "DOCX" to download your
+        document
+      </li>
+    </ol>
+
+    <div class="tip">
+      <strong>💡 Tip:</strong> The editor automatically saves your work to
+      browser storage. You won't lose your progress!
+    </div>
+
+    <h2>🎨 Interface Overview</h2>
+
+    <h3>Header Bar</h3>
+    <ul>
+      <li><strong>Compile Button</strong> (Green): Compiles your LaTeX code</li>
+      <li><strong>PDF Button</strong>: Downloads compiled PDF</li>
+      <li><strong>DOCX Button</strong>: Downloads as Word document</li>
+      <li><strong>Templates Button</strong>: Opens template selector</li>
+      <li><strong>New Button</strong>: Creates a new blank document</li>
+      <li>
+        <strong>Theme Toggle</strong> (Moon/Sun icon): Switches between dark and
+        light themes
+      </li>
+      <li><strong>Settings</strong> (Gear icon): Opens settings panel</li>
+    </ul>
+
+    <h3>Editor Pane (Left)</h3>
+    <ul>
+      <li>Professional code editor with LaTeX syntax highlighting</li>
+      <li>Line numbers for easy reference</li>
+      <li>Auto-indentation and bracket matching</li>
+      <li>Minimap for navigation (right side of editor)</li>
+      <li>Font size controls (+ and - buttons)</li>
+    </ul>
+
+    <h3>Preview Pane (Right)</h3>
+    <ul>
+      <li>Real-time PDF preview</li>
+      <li>Zoom controls (+ and - buttons)</li>
+      <li>Shows compilation errors if any</li>
+    </ul>
+
+    <h3>Status Bar (Bottom)</h3>
+    <ul>
+      <li>Shows current status (Ready, Compiling, Error)</li>
+      <li>Displays cursor position (line and column)</li>
+    </ul>
+
+    <h2>⌨️ Keyboard Shortcuts</h2>
+
+    <table>
+      <tr>
+        <th>Shortcut</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + B</code></td>
+        <td>Compile document</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + S</code></td>
+        <td>Save to local storage</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + F</code></td>
+        <td>Find in document</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + H</code></td>
+        <td>Find and replace</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + Z</code></td>
+        <td>Undo</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + Shift + Z</code></td>
+        <td>Redo</td>
+      </tr>
+      <tr>
+        <td><code>Ctrl/Cmd + /</code></td>
+        <td>Toggle comment</td>
+      </tr>
+      <tr>
+        <td><code>Tab</code></td>
+        <td>Indent</td>
+      </tr>
+      <tr>
+        <td><code>Shift + Tab</code></td>
+        <td>Unindent</td>
+      </tr>
+    </table>
+
+    <h2>📝 Using Templates</h2>
+
+    <p>Templates provide quick-start documents for common use cases:</p>
+
+    <h3>Available Templates</h3>
+
+    <h4>1. Article</h4>
+    <p>Best for: Academic papers, short documents, articles</p>
+    <p>Includes: Abstract, sections, math equations, lists</p>
+
+    <h4>2. Report</h4>
+    <p>Best for: Technical reports, long documents with chapters</p>
+    <p>Includes: Table of contents, chapters, bibliography</p>
+
+    <h4>3. Letter</h4>
+    <p>Best for: Formal letters, correspondence</p>
+    <p>Includes: Address fields, salutation, closing</p>
+
+    <h4>4. Resume/CV</h4>
+    <p>Best for: Job applications, professional profiles</p>
+    <p>Includes: Contact info, sections for education, experience, skills</p>
+
+    <h4>5. Beamer Presentation</h4>
+    <p>Best for: Slides, presentations, lectures</p>
+    <p>Includes: Title slide, content slides, lists, blocks</p>
+
+    <h4>6. Math Document</h4>
+    <p>Best for: Mathematical papers, problem sets</p>
+    <p>Includes: Theorems, proofs, equations, matrices</p>
+
+    <div class="tip">
+      <strong>💡 How to Use Templates:</strong>
+      <ol>
+        <li>Click the "Templates" button</li>
+        <li>Select your desired template</li>
+        <li>Customize the content for your needs</li>
+        <li>Click "Compile" to see the result</li>
+      </ol>
+    </div>
+
+    <h2>⚙️ Settings</h2>
+
+    <h3>Auto-Compile</h3>
+    <p>
+      When enabled, automatically compiles your document after you stop typing.
+    </p>
+    <ul>
+      <li><strong>Pros:</strong> See changes instantly</li>
+      <li><strong>Cons:</strong> May slow down for large documents</li>
+    </ul>
+
+    <h3>Auto-Save</h3>
+    <p>Automatically saves your work to browser's local storage.</p>
+    <div class="tip">
+      <strong>💡 Recommended:</strong> Keep this enabled to prevent data loss!
+    </div>
+
+    <h3>Compile Delay</h3>
+    <p>Sets the delay (in milliseconds) before auto-compilation triggers.</p>
+    <ul>
+      <li><strong>2000ms (default):</strong> Good balance</li>
+      <li>
+        <strong>Lower (500-1000ms):</strong> More responsive, more server load
+      </li>
+      <li>
+        <strong>Higher (3000-5000ms):</strong> Less server load, less responsive
+      </li>
+    </ul>
+
+    <h2>🎨 Themes</h2>
+
+    <p>
+      Toggle between light and dark themes by clicking the moon/sun icon in the
+      header.
+    </p>
+
+    <h3>Light Theme</h3>
+    <ul>
+      <li>Better for daytime use</li>
+      <li>Less eye strain in bright environments</li>
+    </ul>
+
+    <h3>Dark Theme</h3>
+    <ul>
+      <li>Better for nighttime use</li>
+      <li>Reduces eye strain in low-light environments</li>
+      <li>Popular among developers</li>
+    </ul>
+
+    <h2>💾 Saving and Loading</h2>
+
+    <h3>Auto-Save</h3>
+    <p>
+      Your work is automatically saved to browser storage every second when you
+      make changes.
+    </p>
+
+    <h3>Manual Save</h3>
+    <p>Press <code>Ctrl/Cmd + S</code> to manually trigger a save.</p>
+
+    <h3>Loading Previous Work</h3>
+    <p>
+      When you reopen the editor, your last document is automatically loaded.
+    </p>
+
+    <div class="warning">
+      <strong>⚠️ Important:</strong> Browser storage is limited to about 5-10MB
+      and is cleared if you clear browser data. For important documents, always
+      download a copy!
+    </div>
+
+    <h2>📤 Exporting Documents</h2>
+
+    <h3>Export as PDF</h3>
+    <ol>
+      <li>Compile your document first</li>
+      <li>Click the "PDF" button in the toolbar</li>
+      <li>Your browser will download <code>document.pdf</code></li>
+    </ol>
+
+    <h3>Export as Word (.docx)</h3>
+    <ol>
+      <li>Click the "DOCX" button (compilation happens automatically)</li>
+      <li>Your browser will download <code>document.docx</code></li>
+    </ol>
+
+    <div class="warning">
+      <strong>⚠️ Note:</strong> Word conversion requires Pandoc to be installed.
+      Some complex LaTeX features may not convert perfectly to Word format.
+    </div>
+
+    <h2>🔧 Common LaTeX Commands</h2>
+
+    <h3>Document Structure</h3>
+    <pre>
+\documentclass{article}  % Document type
+\begin{document}          % Start content
+\end{document}            % End content</pre
+    >
+
+    <h3>Sections</h3>
+    <pre>
+\section{Title}          % Main section
+\subsection{Title}       % Subsection
+\subsubsection{Title}    % Sub-subsection</pre
+    >
+
+    <h3>Text Formatting</h3>
+    <pre>
+\textbf{bold text}
+\textit{italic text}
+\underline{underlined text}
+\texttt{monospace text}</pre
+    >
+
+    <h3>Lists</h3>
+    <pre>
+% Bulleted list
+\begin{itemize}
+    \item First item
+    \item Second item
+\end{itemize}
+
+% Numbered list
+\begin{enumerate}
+    \item First item
+    \item Second item
+\end{enumerate}</pre
+    >
+
+    <h3>Math</h3>
+    <pre>
+% Inline: $E = mc^2$
+
+% Display:
+\begin{equation}
+    \int_a^b f(x) dx = F(b) - F(a)
+\end{equation}</pre
+    >
+
+    <h3>Tables</h3>
+    <pre>
+\begin{table}[h]
+\begin{tabular}{|c|c|c|}
+\hline
+Header 1 & Header 2 & Header 3 \\
+\hline
+Cell 1 & Cell 2 & Cell 3 \\
+\hline
+\end{tabular}
+\end{table}</pre
+    >
+
+    <h2>❌ Troubleshooting</h2>
+
+    <h3>Compilation Errors</h3>
+
+    <h4>Error: "Missing $ inserted"</h4>
+    <p><strong>Cause:</strong> Math symbols used outside math mode</p>
+    <p>
+      <strong>Solution:</strong> Wrap math in <code>$...$</code> or
+      <code>\[...\]</code>
+    </p>
+
+    <h4>Error: "Undefined control sequence"</h4>
+    <p><strong>Cause:</strong> Typo in command name or missing package</p>
+    <p>
+      <strong>Solution:</strong> Check spelling or add required
+      <code>\usepackage{...}</code>
+    </p>
+
+    <h4>Error: "File not found"</h4>
+    <p><strong>Cause:</strong> Missing image or include file</p>
+    <p>
+      <strong>Solution:</strong> Remove the <code>\includegraphics</code> or add
+      the file
+    </p>
+
+    <h3>Preview Issues</h3>
+
+    <h4>Blank Preview Pane</h4>
+    <ul>
+      <li>Click "Compile" button first</li>
+      <li>Check for compilation errors in error panel</li>
+      <li>Verify backend server is running</li>
+    </ul>
+
+    <h4>Connection Errors</h4>
+    <ul>
+      <li>Ensure <code>npm start</code> is running</li>
+      <li>Check that port 3000 is not blocked</li>
+      <li>Try restarting the server</li>
+    </ul>
+
+    <h2>💡 Tips and Best Practices</h2>
+
+    <div class="tip">
+      <h3>Writing Tips</h3>
+      <ul>
+        <li>
+          <strong>Use comments:</strong> Add <code>% comments</code> to document
+          your code
+        </li>
+        <li>
+          <strong>Structure first:</strong> Set up sections before writing
+          content
+        </li>
+        <li><strong>Compile often:</strong> Catch errors early</li>
+        <li>
+          <strong>Use packages:</strong> <code>\usepackage{graphicx}</code> for
+          images, <code>\usepackage{amsmath}</code> for math
+        </li>
+        <li>
+          <strong>Label and reference:</strong> Use <code>\label{}</code> and
+          <code>\ref{}</code> for cross-references
+        </li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <h3>Performance Tips</h3>
+      <ul>
+        <li>Disable auto-compile for large documents</li>
+        <li>Increase compile delay if typing fast</li>
+        <li>Clear browser cache if editor becomes slow</li>
+        <li>Keep documents under 1000 lines when possible</li>
+      </ul>
+    </div>
+
+    <h2>📚 Learning Resources</h2>
+
+    <h3>LaTeX Tutorials</h3>
+    <ul>
+      <li>
+        <strong>Overleaf Tutorial:</strong>
+        https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes
+      </li>
+      <li>
+        <strong>LaTeX Wikibook:</strong> https://en.wikibooks.org/wiki/LaTeX
+      </li>
+      <li>
+        <strong>ShareLaTeX Guide:</strong> https://www.sharelatex.com/learn
+      </li>
+    </ul>
+
+    <h3>Package Documentation</h3>
+    <ul>
+      <li>
+        <strong>CTAN:</strong> https://ctan.org/ (Comprehensive package archive)
+      </li>
+      <li>
+        <strong>TeX Stack Exchange:</strong> https://tex.stackexchange.com/ (Q&A
+        site)
+      </li>
+    </ul>
+
+    <h3>Symbol References</h3>
+    <ul>
+      <li>
+        <strong>Detexify:</strong> http://detexify.kirelabs.org/classify.html
+        (Draw symbols to find commands)
+      </li>
+      <li>
+        <strong>LaTeX Math Symbols:</strong>
+        http://www.rpi.edu/dept/arc/training/latex/LaTeX_symbols.pdf
+      </li>
+    </ul>
+
+    <h2>🎓 Example Workflows</h2>
+
+    <h3>Writing a Research Paper</h3>
+    <ol>
+      <li>Start with "Article" template</li>
+      <li>Add your title, author, and abstract</li>
+      <li>
+        Create sections: Introduction, Methods, Results, Discussion, Conclusion
+      </li>
+      <li>Add citations with BibTeX</li>
+      <li>Include figures and tables</li>
+      <li>Compile and download PDF</li>
+    </ol>
+
+    <h3>Creating a Resume</h3>
+    <ol>
+      <li>Start with "Resume" template</li>
+      <li>Update contact information</li>
+      <li>Fill in education, experience, skills sections</li>
+      <li>Adjust formatting to fit one or two pages</li>
+      <li>Export as PDF for applications</li>
+    </ol>
+
+    <h3>Making Presentation Slides</h3>
+    <ol>
+      <li>Start with "Beamer" template</li>
+      <li>Update title slide information</li>
+      <li>Add content slides with \begin{frame}</li>
+      <li>Use blocks for emphasis</li>
+      <li>Compile to see slide preview</li>
+      <li>Download PDF for presenting</li>
+    </ol>
+
+    <h2>🆘 Getting Help</h2>
+
+    <p>If you encounter issues:</p>
+    <ol>
+      <li>Check this user guide</li>
+      <li>Read the README.md file</li>
+      <li>Look at the QUICKSTART.md for setup issues</li>
+      <li>Check browser console for errors (F12 key)</li>
+      <li>Verify all prerequisites are installed</li>
+    </ol>
+
+    <h2>🎉 You're Ready!</h2>
+
+    <p>
+      You now know how to use all the major features of the LaTeX Editor. Happy
+      writing!
+    </p>
+
+    <div class="feature">
+      <strong>Pro Tip:</strong> Keep this guide open in another tab while
+      working on your first few documents. You'll be a LaTeX expert in no time!
+      🚀
+    </div>
+
+    <hr style="margin: 40px 0" />
+    <p style="text-align: center; color: #7f8c8d">
+      <em
+        >For more information, see README.md • For quick start, see
+        QUICKSTART.md</em
+      >
+    </p>
+  </body>
+</html>
