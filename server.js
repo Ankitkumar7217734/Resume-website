@@ -320,14 +320,24 @@ function injectGraphicsGuard(code) {
 
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`LaTeX Editor Backend running on http://localhost:${PORT}`);
-    console.log('\nMake sure you have the following installed:');
-    console.log('1. LaTeX distribution (MacTeX, TeX Live, or MiKTeX)');
-    console.log('   Install on macOS: brew install --cask mactex');
-    console.log('2. Pandoc (for Word export)');
-    console.log('   Install on macOS: brew install pandoc');
-    console.log('\nPress Ctrl+C to stop the server\n');
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`LaTeX Editor Backend running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Server ready to accept connections`);
+    
+    if (process.env.RENDER) {
+        console.log('Running on Render.com');
+    } else {
+        console.log('\nMake sure you have the following installed:');
+        console.log('1. LaTeX distribution (MacTeX, TeX Live, or MiKTeX)');
+        console.log('   Install on macOS: brew install --cask mactex');
+        console.log('2. Pandoc (for Word export)');
+        console.log('   Install on macOS: brew install pandoc');
+        console.log('\nPress Ctrl+C to stop the server\n');
+    }
+}).on('error', (err) => {
+    console.error('Server failed to start:', err);
+    process.exit(1);
 });
 
 // Handle graceful shutdown
