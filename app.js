@@ -196,7 +196,7 @@ function renameFile(oldName, newName) {
     savedFiles[newName] = savedFiles[oldName];
     savedFiles[newName].lastModified = Date.now();
     delete savedFiles[oldName];
-    
+
     // Update current file name if it's the one being renamed
     if (currentFileName === oldName) {
         currentFileName = newName;
@@ -583,51 +583,92 @@ async function compileLatex() {
         ? 'http://localhost:3000/compile'
         : '/compile';
 
-    try {
-        // Add longer timeout for sleeping server (60 seconds)
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-        showStatus('Compiling... (server may be waking up, please wait)', 'compiling');
-
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code }),
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                currentPdfData = data.pdf;
-                await renderPdf();
-                showStatus('Compilation successful', 'success');
-                showLoading(false);
-                return;
+    // Retry logic for sleeping server on free tier
+    const maxRetries = 3;
+    const retryDelays = [5000, 10000, 15000]; // 5s, 10s, 15s
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            if (attempt > 0) {
+                showStatus(`Retrying... (attempt ${attempt + 1}/${maxRetries}) - Server waking up, please wait`, 'compiling');
+                await new Promise(resolve => setTimeout(resolve, retryDelays[attempt - 1]));
             } else {
-                throw new Error(data.error || 'Compilation failed');
+                showStatus('Compiling... (if this is your first request, server may take 30-60s to wake)', 'compiling');
             }
-        } else {
-            throw new Error('Server error: ' + response.status);
-        }
-    } catch (backendError) {
-        console.log('Backend error:', backendError);
 
-        if (backendError.name === 'AbortError') {
-            showError('Server timeout. The server may be starting up (free tier). Please wait a moment and try again.');
-            showStatus('Timeout - Please retry', 'error');
-            showLoading(false);
-            return;
+            // 90 second timeout for first request (cold start), 30s for retries
+            const timeout = attempt === 0 ? 90000 : 30000;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code }),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    currentPdfData = data.pdf;
+                    await renderPdf();
+                    showStatus('Compilation successful', 'success');
+                    showLoading(false);
+                    return;
+                } else {
+                    // This is a real LaTeX compilation error, not a server issue
+                    showError(`LaTeX Compilation Error:\n\n${data.error}\n\nPlease check your LaTeX syntax.`);
+                    showStatus('Compilation failed', 'error');
+                    showLoading(false);
+                    return;
+                }
+            } else if (response.status === 502 || response.status === 503 || response.status === 504) {
+                // Server is starting up, retry
+                if (attempt === maxRetries - 1) {
+                    throw new Error('Server still starting up after retries');
+                }
+                console.log(`Server starting (${response.status}), will retry...`);
+                continue;
+            } else {
+                throw new Error('Server error: ' + response.status);
+            }
+        } catch (backendError) {
+            console.log('Backend error:', backendError);
+
+            if (backendError.name === 'AbortError') {
+                // Timeout - retry if we have attempts left
+                if (attempt < maxRetries - 1) {
+                    console.log('Request timed out, will retry...');
+                    continue;
+                } else {
+                    showError('⏱️ Server is taking longer than expected to wake up.\n\n🔄 Please wait 30 seconds and click "Compile" again.\n\nNote: Free tier servers sleep after 15 minutes of inactivity and can take up to 60 seconds to wake up on first request.');
+                    showStatus('Timeout - Please retry in 30s', 'error');
+                    showLoading(false);
+                    return;
+                }
+            }
+
+            // Network error or other error - retry if we have attempts left
+            if (attempt < maxRetries - 1) {
+                console.log('Network error, will retry...');
+                continue;
+            }
         }
     }
 
-    // Backend failed or not available, try LaTeX.js
-    try {
+    // All retry attempts failed - show helpful error message
+    showError('❌ Unable to connect to LaTeX server after multiple attempts.\n\n💡 This usually means:\n• Free tier server is waking up (takes 30-60 seconds)\n• Or temporary network issue\n\n✅ Solution: Wait 30 seconds and click "Compile" again\n\nNote: LaTeX.js browser fallback has limited package support. For full LaTeX features, the backend server is required.');
+    showStatus('Server unavailable - Please retry', 'error');
+    showLoading(false);
+    return;
+
+    // Backend failed or not available, try LaTeX.js (disabled - limited support)
+    /* try {
         if (typeof latexjs === 'undefined') {
             throw new Error('Backend server unavailable. If this persists, the server may be restarting. Please wait 30-60 seconds and try again.');
         }
@@ -691,6 +732,7 @@ async function compileLatex() {
     } finally {
         showLoading(false);
     }
+    */
 }
 
 // Render PDF
