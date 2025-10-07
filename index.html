@@ -278,6 +278,31 @@
       </div>
     </div>
 
+    <!-- Rename Modal -->
+    <div id="renameModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Rename File</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <label for="newFileName">New file name:</label>
+            <input
+              type="text"
+              id="newFileName"
+              placeholder="Enter new file name"
+              style="width: 100%; padding: 8px; margin-top: 8px;"
+            />
+          </div>
+          <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-secondary" id="cancelRename">Cancel</button>
+            <button class="btn btn-primary" id="confirmRename">Rename</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal hidden">
       <div class="modal-content">

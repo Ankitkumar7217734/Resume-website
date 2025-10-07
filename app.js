@@ -98,6 +98,9 @@ function updateHomepage() {
                     <button class="btn btn-sm btn-secondary open-file-btn">
                         <i class="fas fa-folder-open"></i> Open
                     </button>
+                    <button class="btn btn-sm btn-info rename-file-btn">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     <button class="btn btn-sm btn-danger delete-file-btn">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -112,6 +115,14 @@ function updateHomepage() {
             e.stopPropagation();
             const fileName = e.target.closest('.file-item').dataset.filename;
             openFile(fileName);
+        });
+    });
+
+    document.querySelectorAll('.rename-file-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const fileName = e.target.closest('.file-item').dataset.filename;
+            showRenameModal(fileName);
         });
     });
 
@@ -139,6 +150,62 @@ function openFile(fileName) {
         showEditor();
         showStatus(`Opened: ${fileName}`, 'success');
     }
+}
+
+// Rename file
+let fileToRename = null;
+
+function showRenameModal(fileName) {
+    fileToRename = fileName;
+    const modal = document.getElementById('renameModal');
+    const input = document.getElementById('newFileName');
+    input.value = fileName;
+    modal.classList.remove('hidden');
+    input.focus();
+    input.select();
+}
+
+function hideRenameModal() {
+    const modal = document.getElementById('renameModal');
+    modal.classList.add('hidden');
+    fileToRename = null;
+}
+
+function renameFile(oldName, newName) {
+    // Validate new name
+    if (!newName || newName.trim() === '') {
+        alert('Please enter a valid file name.');
+        return;
+    }
+
+    newName = newName.trim();
+
+    // Check if name hasn't changed
+    if (oldName === newName) {
+        hideRenameModal();
+        return;
+    }
+
+    // Check if file with new name already exists
+    if (savedFiles[newName]) {
+        alert(`A file named "${newName}" already exists. Please choose a different name.`);
+        return;
+    }
+
+    // Rename the file
+    savedFiles[newName] = savedFiles[oldName];
+    savedFiles[newName].lastModified = Date.now();
+    delete savedFiles[oldName];
+    
+    // Update current file name if it's the one being renamed
+    if (currentFileName === oldName) {
+        currentFileName = newName;
+    }
+
+    saveSavedFiles();
+    updateHomepage();
+    hideRenameModal();
+    showStatus(`Renamed to: ${newName}`, 'success');
 }
 
 // Delete file
@@ -381,6 +448,27 @@ function initializeEventListeners() {
         });
     });
 
+    // Rename modal
+    document.getElementById('confirmRename').addEventListener('click', () => {
+        if (fileToRename) {
+            const newName = document.getElementById('newFileName').value;
+            renameFile(fileToRename, newName);
+        }
+    });
+
+    document.getElementById('cancelRename').addEventListener('click', () => {
+        hideRenameModal();
+    });
+
+    document.getElementById('newFileName').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && fileToRename) {
+            const newName = document.getElementById('newFileName').value;
+            renameFile(fileToRename, newName);
+        } else if (e.key === 'Escape') {
+            hideRenameModal();
+        }
+    });
+
     // Settings
     document.getElementById('autoCompile').addEventListener('change', (e) => {
         settings.autoCompile = e.target.checked;
@@ -529,7 +617,7 @@ async function compileLatex() {
         }
     } catch (backendError) {
         console.log('Backend error:', backendError);
-        
+
         if (backendError.name === 'AbortError') {
             showError('Server timeout. The server may be starting up (free tier). Please wait a moment and try again.');
             showStatus('Timeout - Please retry', 'error');

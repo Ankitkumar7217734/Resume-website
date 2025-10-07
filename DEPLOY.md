@@ -1,6 +1,7 @@
 # 🚀 Deploy LaTeX Editor to Render.com
 
 ## Prerequisites
+
 - GitHub account
 - Render.com account (free)
 - Your LaTeX Editor code pushed to GitHub
@@ -32,14 +33,17 @@ git push -u origin main
 ### 2️⃣ Deploy on Render.com
 
 1. **Sign up / Log in to Render.com**
+
    - Go to https://render.com
    - Sign up with GitHub (easiest option)
 
 2. **Create New Web Service**
+
    - Click "New +" button
    - Select "Web Service"
 
 3. **Connect Repository**
+
    - Connect your GitHub account
    - Find and select your `latex-editor` repository
    - Click "Connect"
@@ -59,6 +63,7 @@ git push -u origin main
    ```
 
 5. **Advanced Settings** (Optional)
+
    - Auto-Deploy: Yes (recommended)
    - Environment Variables: None needed
 
@@ -67,6 +72,7 @@ git push -u origin main
 ### 3️⃣ Wait for Deployment
 
 Render will:
+
 1. ✅ Clone your repository
 2. ✅ Run `build.sh` (installs TeX Live, Pandoc, npm packages)
 3. ✅ Start your server with `node server.js`
@@ -76,6 +82,7 @@ This takes **5-10 minutes** (first time is slow due to LaTeX installation)
 ### 4️⃣ Access Your Live Site
 
 Once deployed, you'll get a URL like:
+
 ```
 https://latex-editor-xxxx.onrender.com
 ```
@@ -87,27 +94,32 @@ https://latex-editor-xxxx.onrender.com
 ## 🔧 Important Notes
 
 ### Free Tier Limitations
+
 - **Sleeps after 15 minutes** of inactivity
 - **Wakes up in ~30 seconds** when accessed
 - **750 hours/month** free (enough for most personal use)
 - Keep it active: Use cron-job.org to ping every 14 minutes (optional)
 
 ### Build Time
+
 - **First deploy**: ~10 minutes (installs LaTeX)
 - **Subsequent deploys**: ~2-3 minutes
 
 ### Troubleshooting
 
 **Build fails?**
+
 - Check Render logs for errors
 - Ensure `build.sh` has execute permissions (`chmod +x build.sh`)
 - LaTeX packages might timeout - try again
 
 **App won't start?**
+
 - Check that `PORT` environment variable is used in server.js ✅ (already configured)
 - Check logs for errors
 
 **LaTeX compilation fails?**
+
 - TeX Live installation might be incomplete
 - Check Render logs
 - Try redeploying
@@ -135,11 +147,13 @@ https://latex-editor-xxxx.onrender.com
 ## 💰 Cost Estimate
 
 **Free Tier**: $0/month
+
 - Perfect for personal use, portfolios, demos
 - 750 hours/month free
 - Unlimited bandwidth
 
 **Paid Tier** (if you upgrade): ~$7/month
+
 - No sleep
 - More resources
 - Priority support
@@ -155,6 +169,7 @@ Common issues and solutions:
 
 **Issue**: LaTeX package missing
 **Solution**: Add package to `build.sh`:
+
 ```bash
 apt-get install -y texlive-YOUR-PACKAGE
 ```
@@ -167,6 +182,7 @@ apt-get install -y texlive-YOUR-PACKAGE
 ## 🔄 Updates and Redeployment
 
 When you push to GitHub:
+
 1. Commit changes: `git add . && git commit -m "Update"`
 2. Push: `git push`
 3. Render auto-deploys (if enabled)

@@ -11,11 +11,13 @@ All necessary files have been created and configured for Render.com deployment.
 ### ✅ Configuration Files Created
 
 1. **`render.yaml`** - Render.com service configuration
+
    - Specifies build and start commands
    - Sets Node.js version
    - Configures port
 
 2. **`build.sh`** - Build script for Render
+
    - Installs TeX Live (LaTeX)
    - Installs Pandoc
    - Installs npm dependencies
@@ -30,6 +32,7 @@ All necessary files have been created and configured for Render.com deployment.
 ### ✅ Code Updates
 
 4. **`server.js`** - Updated for production
+
    - Uses `process.env.PORT` for Render
    - Already serves static files
    - Ready for production
@@ -101,16 +104,19 @@ See complete instructions in `DEPLOY.md`
 ## 💡 Quick Tips
 
 ### Before Deploying
+
 1. Test locally: `node server.js` (should work on port 3000)
 2. Commit all changes to git
 3. Push to GitHub
 
 ### During Deployment
+
 1. First build takes ~10 minutes (installs LaTeX)
 2. Watch Render logs for progress
 3. Wait for "Live" status
 
 ### After Deployment
+
 1. Test with all templates
 2. Share your URL!
 3. Bookmark the Render dashboard
@@ -120,6 +126,7 @@ See complete instructions in `DEPLOY.md`
 ## 🔗 Your Deployment URL
 
 After deploying, you'll get:
+
 ```
 https://latex-editor-XXXX.onrender.com
 ```
@@ -146,6 +153,7 @@ This is your live LaTeX editor! 🎉
 ## 💰 Cost
 
 **FREE TIER** ✅
+
 - 750 hours/month
 - Unlimited bandwidth
 - Sleeps after 15 min inactivity
@@ -166,6 +174,7 @@ This is your live LaTeX editor! 🎉
 ## 🎊 Ready to Go Live?
 
 **Just 3 commands:**
+
 ```bash
 git add .
 git commit -m "Deploy to Render"

@@ -809,6 +809,15 @@ body {
   font-size: 24px;
 }
 
+.btn-info {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #2980b9;
+}
+
 .btn-danger {
   background-color: var(--error-color);
   color: white;
