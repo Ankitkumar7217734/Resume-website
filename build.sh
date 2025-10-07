@@ -7,10 +7,16 @@ echo "Starting build process..."
 echo "Installing Node.js dependencies..."
 npm install
 
-# Install TeX Live (minimal LaTeX distribution)
-echo "Installing TeX Live..."
+# Install TeX Live (comprehensive LaTeX distribution)
+echo "Installing TeX Live with all necessary packages..."
 apt-get update
-apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended
+apt-get install -y \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-xetex \
+    texlive-luatex
 
 # Install Pandoc for DOCX conversion
 echo "Installing Pandoc..."
