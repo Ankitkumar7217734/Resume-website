@@ -50,9 +50,6 @@
           <button id="newDocBtn" class="btn btn-secondary" title="New Document">
             <i class="fas fa-file"></i> New
           </button>
-          <button id="aiBtn" class="btn btn-primary editor-only" title="AI Assistant">
-            <i class="fas fa-magic"></i> AI Generate
-          </button>
         </div>
       </div>
       <div class="header-right">
@@ -301,38 +298,6 @@
           <div style="margin-top: 20px; text-align: right">
             <button class="btn btn-secondary" id="cancelRename">Cancel</button>
             <button class="btn btn-primary" id="confirmRename">Rename</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AI Assistant Modal -->
-    <div id="aiModal" class="modal hidden">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>🤖 AI Assistant</h2>
-          <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p style="margin-bottom: 15px; color: var(--text-secondary)">
-            Describe what you want to create and AI will generate LaTeX code for you.
-          </p>
-          <div class="setting-group">
-            <label for="aiPrompt">What would you like to create?</label>
-            <textarea
-              id="aiPrompt"
-              placeholder="Example: Create a professional resume for a software engineer with 5 years of experience in Python and JavaScript..."
-              style="width: 100%; padding: 10px; margin-top: 8px; min-height: 120px; font-family: inherit; resize: vertical;"
-            ></textarea>
-          </div>
-          <div id="aiStatus" style="margin-top: 10px; display: none;">
-            <i class="fas fa-spinner fa-spin"></i> <span id="aiStatusText">Generating...</span>
-          </div>
-          <div style="margin-top: 20px; text-align: right">
-            <button class="btn btn-secondary" id="cancelAI">Cancel</button>
-            <button class="btn btn-primary" id="generateAI">
-              <i class="fas fa-magic"></i> Generate with AI
-            </button>
           </div>
         </div>
       </div>

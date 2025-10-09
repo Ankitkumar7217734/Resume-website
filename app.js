@@ -228,68 +228,6 @@ function clearAllFiles() {
     }
 }
 
-// Generate LaTeX with AI
-async function generateWithAI(prompt) {
-    if (!prompt || prompt.trim() === '') {
-        alert('Please describe what you want to create.');
-        return;
-    }
-
-    // Show loading state
-    const aiStatus = document.getElementById('aiStatus');
-    const aiStatusText = document.getElementById('aiStatusText');
-    const generateBtn = document.getElementById('generateAI');
-    
-    aiStatus.style.display = 'block';
-    aiStatusText.textContent = 'Generating LaTeX code with AI...';
-    generateBtn.disabled = true;
-
-    // Determine API URL
-    const apiUrl = window.location.hostname === 'localhost'
-        ? 'http://localhost:3000/generate-latex'
-        : '/generate-latex';
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt: prompt.trim() })
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.latex) {
-            // Insert the generated LaTeX into the editor
-            editor.setValue(data.latex);
-            
-            // Close the modal
-            document.getElementById('aiModal').classList.add('hidden');
-            document.getElementById('aiPrompt').value = '';
-            
-            // Show success message
-            showStatus('AI generated LaTeX successfully!', 'success');
-            
-            // Auto-compile if enabled
-            if (settings.autoCompile) {
-                setTimeout(() => compileLatex(), 1000);
-            }
-        } else {
-            showError(data.error || 'Failed to generate LaTeX code');
-            showStatus('AI generation failed', 'error');
-        }
-    } catch (error) {
-        console.error('AI generation error:', error);
-        showError('Failed to connect to AI service. ' + error.message);
-        showStatus('AI generation failed', 'error');
-    } finally {
-        // Hide loading state
-        aiStatus.style.display = 'none';
-        generateBtn.disabled = false;
-    }
-}
-
 // Create new file
 function createNewFile(content = null, name = null) {
     const fileName = name || `Document_${Date.now()}`;
@@ -429,12 +367,6 @@ function initializeEventListeners() {
     // Theme toggle
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-    // AI button
-    document.getElementById('aiBtn').addEventListener('click', () => {
-        document.getElementById('aiModal').classList.remove('hidden');
-        document.getElementById('aiPrompt').focus();
-    });
-
     // Settings button
     document.getElementById('settingsBtn').addEventListener('click', () => {
         document.getElementById('settingsModal').classList.remove('hidden');
@@ -534,24 +466,6 @@ function initializeEventListeners() {
             renameFile(fileToRename, newName);
         } else if (e.key === 'Escape') {
             hideRenameModal();
-        }
-    });
-
-    // AI modal
-    document.getElementById('generateAI').addEventListener('click', () => {
-        const prompt = document.getElementById('aiPrompt').value;
-        generateWithAI(prompt);
-    });
-
-    document.getElementById('cancelAI').addEventListener('click', () => {
-        document.getElementById('aiModal').classList.add('hidden');
-        document.getElementById('aiPrompt').value = '';
-    });
-
-    document.getElementById('aiPrompt').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && e.ctrlKey) {
-            const prompt = document.getElementById('aiPrompt').value;
-            generateWithAI(prompt);
         }
     });
 
@@ -844,31 +758,73 @@ async function renderPdf() {
         const pdfData = atob(currentPdfData);
         const loadingTask = pdfjsLib.getDocument({ data: pdfData });
         const pdf = await loadingTask.promise;
-        const page = await pdf.getPage(1);
 
         // Get device pixel ratio for high-DPI displays
         const pixelRatio = window.devicePixelRatio || 1;
-
-        // Render at higher resolution for crisp display
         const scale = currentZoom * pixelRatio * 1.5;
-        const viewport = page.getViewport({ scale: scale });
 
-        // Set canvas size to match viewport
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        // Render all pages
+        const numPages = pdf.numPages;
+        let totalHeight = 0;
+        let maxWidth = 0;
+
+        // Calculate total canvas size
+        const pageViewports = [];
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: scale });
+            pageViewports.push(viewport);
+            totalHeight += viewport.height;
+            if (viewport.width > maxWidth) {
+                maxWidth = viewport.width;
+            }
+        }
+
+        // Set canvas size to fit all pages
+        canvas.height = totalHeight;
+        canvas.width = maxWidth;
 
         // Scale down canvas display size for proper zoom
-        canvas.style.width = Math.floor(viewport.width / pixelRatio / 1.5) + 'px';
-        canvas.style.height = Math.floor(viewport.height / pixelRatio / 1.5) + 'px';
+        canvas.style.width = Math.floor(maxWidth / pixelRatio / 1.5) + 'px';
+        canvas.style.height = Math.floor(totalHeight / pixelRatio / 1.5) + 'px';
 
-        const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-        };
+        // Clear canvas
+        context.fillStyle = '#f5f5f5';
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Store render task so we can cancel it if needed
-        renderTask = page.render(renderContext);
-        await renderTask.promise;
+        // Render each page
+        let yOffset = 0;
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const viewport = pageViewports[pageNum - 1];
+
+            // Create a temporary canvas for this page
+            const tempCanvas = document.createElement('canvas');
+            const tempContext = tempCanvas.getContext('2d');
+            tempCanvas.height = viewport.height;
+            tempCanvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: tempContext,
+                viewport: viewport
+            };
+
+            // Render the page to temp canvas
+            renderTask = page.render(renderContext);
+            await renderTask.promise;
+
+            // Draw the rendered page onto main canvas at correct position
+            context.drawImage(tempCanvas, 0, yOffset);
+
+            // Add page separator (small gap)
+            yOffset += viewport.height + (10 * scale);
+
+            // Draw page separator line
+            if (pageNum < numPages) {
+                context.fillStyle = '#ddd';
+                context.fillRect(0, yOffset - (5 * scale), maxWidth, 2);
+            }
+        }
 
         canvas.classList.add('active');
     } catch (error) {
